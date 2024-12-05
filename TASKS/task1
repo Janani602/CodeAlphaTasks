@@ -1,0 +1,48 @@
+package task1;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class StudentGradeTracker {
+    public static void main(String[] args) {
+        // Step 1: Initialize
+        ArrayList<Integer> grades = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        
+        // Step 2: Input grades
+        System.out.println("Enter student grades (Enter -1 to stop):");
+        while (true) {
+            int grade = scanner.nextInt();
+            if (grade == -1) break; // Sentinel value to stop input
+            if (grade >= 0 && grade <= 100) { // Validate input
+                grades.add(grade);
+            } else {
+                System.out.println("Invalid grade. Please enter a value between 0 and 100.");
+            }
+        }
+        
+        // Step 3: Check if grades are entered
+        if (grades.isEmpty()) {
+            System.out.println("No grades entered. Exiting.");
+            return;
+        }
+        
+        // Step 4: Compute Metrics
+        int total = 0;
+        int highest = grades.get(0);
+        int lowest = grades.get(0);
+        
+        for (int grade : grades) {
+            total += grade;
+            if (grade > highest) highest = grade;
+            if (grade < lowest) lowest = grade;
+        }
+        
+        double average = total / (double) grades.size();
+        
+        // Step 5: Display Results
+        System.out.println("Results:");
+        System.out.println("Average Score: " + average);
+        System.out.println("Highest Score: " + highest);
+        System.out.println("Lowest Score: " + lowest);
+    }
+}
