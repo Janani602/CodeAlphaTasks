@@ -1,0 +1,134 @@
+package booking;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Room {
+    int id;
+    String type;
+    double price;
+    boolean isBooked;
+
+    Room(int id, String type, double price) {
+        this.id = id;
+        this.type = type;
+        this.price = price;
+        this.isBooked = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Room ID: " + id + ", Type: " + type + ", Price: $" + price + ", Status: " + (isBooked ? "Booked" : "Available");
+    }
+}
+
+class Reservation {
+    int roomId;
+    String customerName;
+    double amountPaid;
+
+    Reservation(int roomId, String customerName, double amountPaid) {
+        this.roomId = roomId;
+        this.customerName = customerName;
+        this.amountPaid = amountPaid;
+    }
+
+    @Override
+    public String toString() {
+        return "Room ID: " + roomId + ", Customer: " + customerName + ", Amount Paid: $" + amountPaid;
+    }
+}
+
+public class HotelReservationSystem {
+    static ArrayList<Room> rooms = new ArrayList<>();
+    static ArrayList<Reservation> reservations = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize rooms
+        rooms.add(new Room(1, "Single Room", 100.0));
+        rooms.add(new Room(2, "Double Room", 150.0));
+        rooms.add(new Room(3, "Suite", 300.0));
+        rooms.add(new Room(4, "Luxury Room", 500.0));
+
+        while (true) {
+            System.out.println("\nHotel Reservation System");
+            System.out.println("1. View Available Rooms");
+            System.out.println("2. Make a Reservation");
+            System.out.println("3. View Booking Details");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    viewAvailableRooms();
+                    break;
+                case 2:
+                    makeReservation(scanner);
+                    break;
+                case 3:
+                    viewBookingDetails();
+                    break;
+                case 4:
+                    System.out.println("Thank you for using the Hotel Reservation System!");
+                    return;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    // View available rooms
+    public static void viewAvailableRooms() {
+        System.out.println("\nAvailable Rooms:");
+        for (Room room : rooms) {
+            if (!room.isBooked) {
+                System.out.println(room);
+            }
+        }
+    }
+
+    // Make a reservation
+    public static void makeReservation(Scanner scanner) {
+        System.out.print("\nEnter Room ID to book: ");
+        int roomId = scanner.nextInt();
+        Room roomToBook = null;
+
+        for (Room room : rooms) {
+            if (room.id == roomId && !room.isBooked) {
+                roomToBook = room;
+                break;
+            }
+        }
+
+        if (roomToBook == null) {
+            System.out.println("Invalid Room ID or Room already booked!");
+            return;
+        }
+
+        System.out.print("Enter your name: ");
+        scanner.nextLine(); // Consume leftover newline
+        String customerName = scanner.nextLine();
+
+        System.out.print("Enter payment amount: ");
+        double payment = scanner.nextDouble();
+
+        if (payment >= roomToBook.price) {
+            roomToBook.isBooked = true;
+            reservations.add(new Reservation(roomId, customerName, payment));
+            System.out.println("Reservation successful! Room ID " + roomId + " has been booked.");
+        } else {
+            System.out.println("Insufficient payment! Reservation failed.");
+        }
+    }
+
+    // View booking details
+    public static void viewBookingDetails() {
+        System.out.println("\nBooking Details:");
+        for (Reservation reservation : reservations) {
+            System.out.println(reservation);
+        }
+    }
+}
